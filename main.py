@@ -302,7 +302,7 @@ st.markdown("""
         ✨ Made with passion using Streamlit ✨
     </p>
     <p style="margin: 0.5rem 0 0 0; opacity: 0.8; font-size: 0.9rem;">
-        © 2024 Zulkifli Portfolio - All rights reserved
+        © 2025 Zulkifli Portfolio - All rights reserved
     </p>
 </div>
 """, unsafe_allow_html=True)
