@@ -1,12 +1,11 @@
 import streamlit as st
-import home, about, skills, projects, contact
 
 st.set_page_config(
     page_title="Zulkifli - Portfolio",
     page_icon="👨‍💻",
 )
 
-# Custom CSS untuk navigasi dengan tema kuning-hitam dan animasi
+import home, about, skills, projects, contact
 st.markdown("""
 <style>
     /* Reset default styling */
