@@ -672,10 +672,12 @@ body {
         subject = st.selectbox(
             "Project Type *",
             [
+                "Cybersecurity Audit / Penetration Testing",
+                "Digital Forensics & OSINT Investigation",
+                "Automation & Python Scripting",
+                "AI/ML Project",
                 "Web Development",
                 "Mobile App",
-                "Data Analysis",
-                "AI/ML Project",
                 "Consulting",
                 "Other",
             ],
@@ -690,11 +692,10 @@ body {
         budget = st.selectbox(
             "Budget Range (Optional)",
             [
-                "< $1,000",
-                "$1,000 - $5,000",
-                "$5,000 - $10,000",
-                "$10,000 - $25,000",
-                "$25,000+",
+                "< Rp5.000.000",
+                "Rp5.000.000 - Rp15.000.000",
+                "Rp15.000.000 - Rp50.000.000",
+                "Rp50.000.000+",
                 "Let's discuss",
             ],
         )
@@ -704,7 +705,8 @@ body {
         if submitted:
             if name and email and message:
                 st.success(
-                    "🎉 Thank you for your message! I'll get back to you within 24 hours."
+                    "🎉 Thank you for your message! I'll get back to you within 24 hours. "
+                    "Your information will be kept confidential and secure."
                 )
                 st.balloons()
             else:
@@ -715,51 +717,65 @@ body {
     st.markdown("### ❓ Frequently Asked Questions")
 
     with st.expander("💰 What are your rates?"):
-        st.write("""
-        My rates are IDR 50,000 per hour across all types of projects.
-        I offer transparent pricing and can discuss fixed rates for bigger projects.
-        """)
+        st.write(
+        """
+        My rates start from IDR 50,000 per hour, depending on project complexity.  
+        For bigger projects (e.g., cybersecurity assessments or digital forensics), we can discuss fixed pricing packages.
+        """
+        )
 
     with st.expander("⏳ How long does a typical project take?"):
-        st.write("""
+        st.write(
+            """
         Typical timelines vary by project type:
         - **Web Development**: 1-2 weeks  
         - **AI/ML Projects**: About 1 month  
         - **Mobile Apps**: About 1 month  
         - **Server Setup & Backend**: Around 1 month  
         - **Python Scripting & Automation**: 1-3 weeks  
+        - **Cybersecurity Audit & Penetration Testing**: 1-3 weeks  
+        - **Digital Forensics Investigation**: Case-dependent, usually 1-2 weeks
         
         I provide clear timeline estimates before starting and keep you updated regularly.
-        """)
+        """
+        )
 
     with st.expander("🤝 Do you work with international clients?"):
-        st.write("""
-        Currently, I focus on clients within Indonesia to ensure smooth communication and collaboration.
-        """)
+        st.write(
+            """
+        Currently, I mostly collaborate with clients in Indonesia, but I’m open to international projects where communication can be handled smoothly online.
+        """
+        )
 
     with st.expander("🔧 What technologies do you specialize in?"):
-        st.write("""
-        My skill set includes:
-        - **Frontend & Backend Development**
-        - **Database Management**
-        - **Cloud Services**
-        - **AI/ML Tools and Frameworks**
-        - **Python for various applications**
+        st.write(
+            """
+        - **Full-Stack Web Development (React, Node.js, PHP, Flutter)**  
+        - **Cybersecurity & Digital Forensics (Penetration Testing, Malware Analysis, OSINT)**  
+        - **Automation & Scripting (Python, Selenium, Scrapy)**  
+        - **AI/ML for Threat Intelligence & Risk Scoring**  
+        - **Database & Cloud Services (MySQL, MongoDB, Firebase)**  
         - And more based on project needs!
-        """)
+        """
+        )
 
     with st.expander("⚙️ How does your work process look like?"):
-        st.write("""
+        st.write(
+            """
         - Initial consultation to understand your needs  
         - Proposal & timeline agreement  
         - Development with regular updates  
         - Revision phase to refine the result  
         - Delivery & support after completion  
         - Free consultation available anytime!
-        """)
+        - Strict confidentiality for sensitive projects (cybersecurity & forensic cases)  
+        """
+        )
 
     with st.expander("🔄 Do you offer revisions and guarantees?"):
-        st.write("""
-        Yes! I provide a reasonable number of revisions to ensure your satisfaction.  
-        I also offer support post-project to fix any issues and help with deployment.
-        """)
+        st.write(
+            """
+        Yes! I provide revisions on development projects and detailed reports for cybersecurity/forensics work.  
+        Post-project support is included to ensure everything runs smoothly and securely.
+        """
+        )

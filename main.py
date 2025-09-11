@@ -1,4 +1,5 @@
 import streamlit as st
+import datetime
 
 st.set_page_config(
     page_title="Zulkifli - Portfolio",
@@ -287,7 +288,14 @@ with tab5:
     st.markdown('</div>', unsafe_allow_html=True)
 
 # Footer dengan tema yang konsisten
-st.markdown("""
+# Dapatkan waktu saat ini
+current_time = datetime.datetime.now()
+year = current_time.year
+# Format tanggal, bulan, dan tahun
+date_str = current_time.strftime("%B %d, %Y")
+
+st.markdown(
+    f"""
 <div style="
     margin-top: 3rem;
     padding: 1.5rem;
@@ -302,10 +310,15 @@ st.markdown("""
         ✨ Made with passion using Streamlit ✨
     </p>
     <p style="margin: 0.5rem 0 0 0; opacity: 0.8; font-size: 0.9rem;">
-        © 2025 Zulkifli Portfolio - All rights reserved
+        Last updated on {date_str}
+    </p>
+    <p style="margin: 0.5rem 0 0 0; opacity: 0.8; font-size: 0.9rem;">
+        © {year} Zulkifli Portfolio - All rights reserved
     </p>
 </div>
-""", unsafe_allow_html=True)
+""",
+    unsafe_allow_html=True,
+)
 
 # CSS untuk fade-in animation content
 st.markdown("""

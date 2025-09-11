@@ -322,20 +322,22 @@ def app():
     """, unsafe_allow_html=True)
 
     # Hero Section
-    st.markdown("""
+    st.markdown(
+        """
     <div class="hero-container">
         <h1 class="hero-title">Zulkifli</h1>
-        <h2 class="hero-subtitle">Full Stack Developer</h2>
+        <h2 class="hero-subtitle">CyberSecurity</h2>
         <p class="hero-description">
-    I'm an IT student passionate about full stack development and machine learning. 
-    I enjoy building real-world projects, learning new technologies, and turning ideas into useful digital solutions.
+    I'm a passionate IT student specializing in web development, cybersecurity, and Android app development. I enjoy building secure, full-stack applications and turning innovative ideas into practical digital solutions
     </p>
     </div>
-    """, unsafe_allow_html=True)
-    
+    """,
+        unsafe_allow_html=True,
+    )
+
     # Quick Stats
     # col1, col2, col3, col4 = st.columns(4)
-    
+
     # with col1:
     #     st.markdown("""
     #     <div class="stat-card">
@@ -343,7 +345,7 @@ def app():
     #         <div class="stat-label">Projects</div>
     #     </div>
     #     """, unsafe_allow_html=True)
-    
+
     # with col2:
     #     st.markdown("""
     #     <div class="stat-card">
@@ -351,7 +353,7 @@ def app():
     #         <div class="stat-label">Years Experience</div>
     #     </div>
     #     """, unsafe_allow_html=True)
-    
+
     # with col3:
     #     st.markdown("""
     #     <div class="stat-card">
@@ -359,7 +361,7 @@ def app():
     #         <div class="stat-label">Happy Clients</div>
     #     </div>
     #     """, unsafe_allow_html=True)
-    
+
     # with col4:
     #     st.markdown("""
     #     <div class="stat-card">
@@ -376,9 +378,9 @@ def app():
         <h2 style="color: #00000; margin-bottom: 1rem;">🌟 Featured Projects</h2>
     </div>
     """, unsafe_allow_html=True)
-    
+
     col1, col2, col3 = st.columns(3)
-    
+
     with col1:
         st.markdown("""
         <div class="project-card floating">
@@ -407,13 +409,14 @@ def app():
         """, unsafe_allow_html=True)
 
     with col3:
-        st.markdown("""
+        st.markdown(
+            """
         <div class="project-card floating">
-            <h3 class="project-title">CodeQuist</h3>
-            <p>Interactive web quiz app that tests users' tech knowledge. Frontend-only, no backend required.</p>
-            <span class="project-tech">HTML</span>
-            <span class="project-tech">CSS</span>
-            <span class="project-tech">JavaScript</span>
-            <p><a href="https://github.com/Zulkifli1409/CodeQuist" target="_blank" style="color: #FFD700;">GitHub Repo</a></p>
+            <h3 class="project-title">X-Scraper</h3>
+            <p>A Python-based tweet scraping tool for the X platform, featuring auto-login and robust filtering.</p>
+            <span class="project-tech">Python</span>
+            <p><a href="https://github.com/Zulkifli1409/X-Scraper" target="_blank" style="color: #FFD700;">GitHub Repo</a></p>
         </div>
-        """, unsafe_allow_html=True)
+        """,
+            unsafe_allow_html=True,
+        )

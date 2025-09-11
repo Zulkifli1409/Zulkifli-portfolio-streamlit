@@ -19,9 +19,14 @@ def load_portfolio_data(github_user="zulkifli1409"):
     response = requests.get(url)
     if response.status_code != 200:
         return {"projects": []}
+
     repos = response.json()
+
+    # Sort repos by 'created_at' in descending order (newest first)
+    sorted_repos = sorted(repos, key=lambda repo: repo["created_at"], reverse=True)
+
     projects = []
-    for repo in repos:
+    for repo in sorted_repos:
         projects.append(
             {
                 "title": repo["name"],

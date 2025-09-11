@@ -319,9 +319,7 @@ def app():
         st.markdown(
             """
         <div class="main-text">
-        I’m Zulkifli, a 6th-semester IT student at Politeknik Negeri Lhokseumawe, based in Aceh. 
-        I’m passionate about full stack web development and also deeply interested in cybersecurity, 
-        AI, and building tech tools that solve real-world problems.
+        I'm Zulkifli, a 7th-semester IT student at Politeknik Negeri Lhokseumawe, currently focusing on cybersecurity. With a background in Python, PHP, Flutter, and MySQL, I enjoy building practical solutions while strengthening my skills in digital forensics and security research.
         </div>
         """,
             unsafe_allow_html=True,
@@ -330,9 +328,7 @@ def app():
         st.markdown(
             """
         <div class="main-text">
-        So far, I've worked on several projects, including an open recruitment website 
-        for a student community and various campus-based applications. I love working 
-        with technologies like Python, PHP, Flutter, C, and MySQL to bring ideas to life.
+        My experience includes creating web and mobile applications for campus projects, which taught me the importance of collaboration and problem-solving. Lately, I’ve been shifting my focus to security projects, penetration testing, and cyber profiling.
         </div>
         """,
             unsafe_allow_html=True,
@@ -341,8 +337,7 @@ def app():
         st.markdown(
             """
         <div class="main-text">
-        My dream is to build a tech startup that contributes to the development of Aceh, 
-        by creating impactful digital solutions and empowering the local community through innovation.
+        My ambition is to contribute to cybersecurity development in Aceh by building impactful digital solutions and, in the long term, establishing a startup that empowers the local community through technology and innovation.
         </div>
         """,
             unsafe_allow_html=True,
@@ -462,7 +457,7 @@ def app():
     """,
         unsafe_allow_html=True,
     )
-    
+
     st.markdown(
         """
     <div class="education-item">
@@ -528,7 +523,6 @@ def app():
     """,
         unsafe_allow_html=True,
     )
-
 
     # Stats section
     st.markdown("---")
