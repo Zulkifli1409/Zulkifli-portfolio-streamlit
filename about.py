@@ -346,20 +346,43 @@ def app():
         )
 
     with col2:
-        # Avatar dengan animasi float
-        st.markdown(
-            """
-       <div class="avatar-container" style="text-align: center; margin-top: 7rem;">
-            <div class="pulse" style="width: 300px; height: 300px; 
-                        background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FFFF00 100%); 
-                        border-radius: 50%; display: flex; align-items: center; justify-content: center; 
-                        font-size: 3rem; color: #000; margin: 0 auto; border: 4px solid #FFA500; overflow: hidden;">
-                <img src="https://i.ibb.co/nMkDyMgd/97692902.jpg" alt="Zulkifli" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
-            </div>
-        </div>
-        """,
-            unsafe_allow_html=True,
-        )
+        # Avatar dengan animasi float - menggunakan file lokal
+        import os
+        from pathlib import Path
+        
+        # Path ke foto profil
+        profile_image_path = Path("assets/profile.jpg")
+        
+        # Cek apakah file ada
+        if profile_image_path.exists():
+            # Tampilkan foto dengan styling
+            st.markdown('<div class="avatar-container" style="text-align: center; margin-top: 7rem;">', unsafe_allow_html=True)
+            st.markdown(
+                '<div class="pulse" style="width: 300px; height: 300px; '
+                'background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FFFF00 100%); '
+                'border-radius: 50%; display: flex; align-items: center; justify-content: center; '
+                'margin: 0 auto; border: 4px solid #FFA500; overflow: hidden;">',
+                unsafe_allow_html=True
+            )
+            # Gunakan st.image untuk menampilkan foto lokal
+            st.image(str(profile_image_path), use_container_width=True)
+            st.markdown('</div></div>', unsafe_allow_html=True)
+        else:
+            # Fallback jika file tidak ada - tampilkan placeholder
+            st.markdown(
+                """
+                <div class="avatar-container" style="text-align: center; margin-top: 7rem;">
+                    <div class="pulse" style="width: 300px; height: 300px; 
+                                background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FFFF00 100%); 
+                                border-radius: 50%; display: flex; align-items: center; justify-content: center; 
+                                font-size: 3rem; color: #000; margin: 0 auto; border: 4px solid #FFA500;">
+                        👤
+                    </div>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
+            st.warning("⚠️ Foto profil tidak ditemukan. Letakkan foto di `assets/profile.jpg`")
 
     st.markdown("</div>", unsafe_allow_html=True)
 
