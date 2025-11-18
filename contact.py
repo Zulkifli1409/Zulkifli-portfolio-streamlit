@@ -10,14 +10,29 @@ import time
 
 # Import email configuration
 try:
-    from email_config import EMAIL_CONFIG
+    from email_config import EMAIL_CONFIG  # Local file (ignored in Git) if present
 except ImportError:
-    # Default configuration if email_config.py doesn't exist
+    EMAIL_CONFIG = {}
+
+# Override / populate from Streamlit secrets if available (Cloud deployment)
+if hasattr(st, "secrets") and "email" in st.secrets:
+    email_secrets = st.secrets["email"]
+    EMAIL_CONFIG = {
+        "enabled": email_secrets.get("enabled", True),
+        "sender_email": email_secrets.get("sender_email", ""),
+        "sender_password": email_secrets.get("sender_password", ""),
+        "receiver_email": email_secrets.get("receiver_email", ""),
+        "smtp_server": email_secrets.get("smtp_server", "smtp.gmail.com"),
+        "smtp_port": email_secrets.get("smtp_port", 465)
+    }
+
+# Fallback defaults if still empty (disabled)
+if not EMAIL_CONFIG:
     EMAIL_CONFIG = {
         "enabled": False,
-        "sender_email": "your-email@gmail.com",
-        "sender_password": "your-app-password",
-        "receiver_email": "zul140904@gmail.com",
+        "sender_email": "",
+        "sender_password": "",
+        "receiver_email": "",
         "smtp_server": "smtp.gmail.com",
         "smtp_port": 465
     }
