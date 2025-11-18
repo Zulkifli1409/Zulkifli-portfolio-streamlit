@@ -349,24 +349,32 @@ def app():
         # Avatar dengan animasi float - menggunakan file lokal
         import os
         from pathlib import Path
+        import base64
         
         # Path ke foto profil
         profile_image_path = Path("assets/profile.jpg")
         
         # Cek apakah file ada
         if profile_image_path.exists():
-            # Tampilkan foto dengan styling
-            st.markdown('<div class="avatar-container" style="text-align: center; margin-top: 7rem;">', unsafe_allow_html=True)
+            # Baca dan encode image sebagai base64
+            with open(profile_image_path, "rb") as img_file:
+                img_data = base64.b64encode(img_file.read()).decode()
+            
+            # Tampilkan foto dengan styling di dalam bulatan
             st.markdown(
-                '<div class="pulse" style="width: 300px; height: 300px; '
-                'background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FFFF00 100%); '
-                'border-radius: 50%; display: flex; align-items: center; justify-content: center; '
-                'margin: 0 auto; border: 4px solid #FFA500; overflow: hidden;">',
-                unsafe_allow_html=True
+                f"""
+                <div class="avatar-container" style="text-align: center; margin-top: 7rem;">
+                    <div class="pulse" style="width: 300px; height: 300px; 
+                                background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FFFF00 100%); 
+                                border-radius: 50%; display: flex; align-items: center; justify-content: center; 
+                                margin: 0 auto; border: 4px solid #FFA500; overflow: hidden;">
+                        <img src="data:image/jpeg;base64,{img_data}" alt="Profile" 
+                             style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                    </div>
+                </div>
+                """,
+                unsafe_allow_html=True,
             )
-            # Gunakan st.image untuk menampilkan foto lokal
-            st.image(str(profile_image_path), use_container_width=True)
-            st.markdown('</div></div>', unsafe_allow_html=True)
         else:
             # Fallback jika file tidak ada - tampilkan placeholder
             st.markdown(
