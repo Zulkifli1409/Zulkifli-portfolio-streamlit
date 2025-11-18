@@ -351,6 +351,9 @@ def app():
         from pathlib import Path
         import base64
         
+        # Tambahkan spacing untuk center vertikal
+        st.markdown("<br>" * 4, unsafe_allow_html=True)
+        
         # Path ke foto profil
         profile_image_path = Path("assets/profile.jpg")
         
@@ -360,18 +363,19 @@ def app():
             with open(profile_image_path, "rb") as img_file:
                 img_data = base64.b64encode(img_file.read()).decode()
             
-            # Tampilkan foto dengan styling di dalam bulatan - centered dengan teks
+            # Tampilkan foto dengan styling di dalam bulatan
             st.markdown(
                 f"""
-                <div class="avatar-container" style="text-align: center; display: flex; align-items: center; justify-content: center; min-height: 100%; padding: 2rem 0;">
-                    <div class="pulse" style="width: 250px; height: 250px; min-width: 250px; min-height: 250px;
+                <div class="avatar-container" style="text-align: center;">
+                    <div class="pulse" style="width: 250px; height: 250px;
                                 background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FFFF00 100%); 
                                 border-radius: 50%; 
                                 border: 4px solid #FFA500; 
                                 overflow: hidden;
+                                margin: 0 auto;
                                 position: relative;">
                         <img src="data:image/jpeg;base64,{img_data}" alt="Profile" 
-                             style="width: 100%; height: 100%; object-fit: cover; object-position: center; position: absolute; top: 0; left: 0;">
+                             style="width: 100%; height: 100%; object-fit: cover; object-position: center;">
                     </div>
                 </div>
                 """,
@@ -381,11 +385,11 @@ def app():
             # Fallback jika file tidak ada - tampilkan placeholder
             st.markdown(
                 """
-                <div class="avatar-container" style="text-align: center; display: flex; align-items: center; justify-content: center; min-height: 100%; padding: 2rem 0;">
-                    <div class="pulse" style="width: 250px; height: 250px; min-width: 250px; min-height: 250px;
+                <div class="avatar-container" style="text-align: center;">
+                    <div class="pulse" style="width: 250px; height: 250px;
                                 background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FFFF00 100%); 
                                 border-radius: 50%; display: flex; align-items: center; justify-content: center; 
-                                font-size: 3rem; color: #000; border: 4px solid #FFA500;">
+                                font-size: 3rem; color: #000; border: 4px solid #FFA500; margin: 0 auto;">
                         👤
                     </div>
                 </div>
