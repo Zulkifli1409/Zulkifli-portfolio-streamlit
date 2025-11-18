@@ -363,13 +363,15 @@ def app():
             # Tampilkan foto dengan styling di dalam bulatan - centered dengan teks
             st.markdown(
                 f"""
-                <div class="avatar-container" style="text-align: center; display: flex; align-items: center; justify-content: center; min-height: 100%;">
-                    <div class="pulse" style="width: 280px; height: 280px; 
+                <div class="avatar-container" style="text-align: center; display: flex; align-items: center; justify-content: center; min-height: 100%; padding: 2rem 0;">
+                    <div class="pulse" style="width: 250px; height: 250px; min-width: 250px; min-height: 250px;
                                 background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FFFF00 100%); 
-                                border-radius: 50%; display: flex; align-items: center; justify-content: center; 
-                                margin: 0 auto; border: 4px solid #FFA500; overflow: hidden;">
+                                border-radius: 50%; 
+                                border: 4px solid #FFA500; 
+                                overflow: hidden;
+                                position: relative;">
                         <img src="data:image/jpeg;base64,{img_data}" alt="Profile" 
-                             style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                             style="width: 100%; height: 100%; object-fit: cover; object-position: center; position: absolute; top: 0; left: 0;">
                     </div>
                 </div>
                 """,
@@ -379,11 +381,11 @@ def app():
             # Fallback jika file tidak ada - tampilkan placeholder
             st.markdown(
                 """
-                <div class="avatar-container" style="text-align: center; display: flex; align-items: center; justify-content: center; min-height: 100%;">
-                    <div class="pulse" style="width: 280px; height: 280px; 
+                <div class="avatar-container" style="text-align: center; display: flex; align-items: center; justify-content: center; min-height: 100%; padding: 2rem 0;">
+                    <div class="pulse" style="width: 250px; height: 250px; min-width: 250px; min-height: 250px;
                                 background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FFFF00 100%); 
                                 border-radius: 50%; display: flex; align-items: center; justify-content: center; 
-                                font-size: 3rem; color: #000; margin: 0 auto; border: 4px solid #FFA500;">
+                                font-size: 3rem; color: #000; border: 4px solid #FFA500;">
                         👤
                     </div>
                 </div>
