@@ -360,11 +360,11 @@ def app():
             with open(profile_image_path, "rb") as img_file:
                 img_data = base64.b64encode(img_file.read()).decode()
             
-            # Tampilkan foto dengan styling di dalam bulatan
+            # Tampilkan foto dengan styling di dalam bulatan - centered dengan teks
             st.markdown(
                 f"""
-                <div class="avatar-container" style="text-align: center; margin-top: 7rem;">
-                    <div class="pulse" style="width: 300px; height: 300px; 
+                <div class="avatar-container" style="text-align: center; display: flex; align-items: center; justify-content: center; min-height: 100%;">
+                    <div class="pulse" style="width: 280px; height: 280px; 
                                 background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FFFF00 100%); 
                                 border-radius: 50%; display: flex; align-items: center; justify-content: center; 
                                 margin: 0 auto; border: 4px solid #FFA500; overflow: hidden;">
@@ -379,8 +379,8 @@ def app():
             # Fallback jika file tidak ada - tampilkan placeholder
             st.markdown(
                 """
-                <div class="avatar-container" style="text-align: center; margin-top: 7rem;">
-                    <div class="pulse" style="width: 300px; height: 300px; 
+                <div class="avatar-container" style="text-align: center; display: flex; align-items: center; justify-content: center; min-height: 100%;">
+                    <div class="pulse" style="width: 280px; height: 280px; 
                                 background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FFFF00 100%); 
                                 border-radius: 50%; display: flex; align-items: center; justify-content: center; 
                                 font-size: 3rem; color: #000; margin: 0 auto; border: 4px solid #FFA500;">
