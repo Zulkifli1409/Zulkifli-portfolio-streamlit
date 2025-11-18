@@ -1,5 +1,7 @@
 import streamlit as st
+from security_middleware import secure_page_wrapper, sanitize_input, validate_url, secure_external_link
 
+@secure_page_wrapper
 def app():
     st.markdown("""
     <style>
@@ -384,27 +386,28 @@ def app():
     with col1:
         st.markdown("""
         <div class="project-card floating">
-            <h3 class="project-title">Or-Komit</h3>
-            <p>Online platform to simplify new member registration and data management for Komit community.</p>
-            <span class="project-tech">HTML</span>
-            <span class="project-tech">CSS</span>
-            <span class="project-tech">JavaScript</span>
-            <span class="project-tech">PHP</span>
-            <span class="project-tech">MySQL</span>
-            <span class="project-tech">Bootstrap</span>
-            <p><a href="https://orkomit.treatstart.com/" target="_blank" style="color: #FFD700;">Live</a></p>
+            <h3 class="project-title">Devpulse</h3>
+            <p>DevPulse is a lightweight Flutter-based desktop app that lets developers manage and monitor multiple local projects from one unified interface.</p>
+            <span class="project-tech">Flutter</span>
+            <span class="project-tech">Dart</span>
+            <span class="project-tech">tray_manager</span>
+            <span class="project-tech">window_manager</span>
+            <p><a href="https://devpulse-teal.vercel.app/" target="_blank" style="color: #FFD700;">Live</a></p>
         </div>
         """, unsafe_allow_html=True)
 
     with col2:
         st.markdown("""
         <div class="project-card floating">
-            <h3 class="project-title">SmartEye</h3>
-            <p>Real-time object detection using YOLOv5 and Flutter for live camera, video, or images with high precision.</p>
-            <span class="project-tech">Dart</span>
-            <span class="project-tech">Python</span>
-            <span class="project-tech">API</span>
-            <p><a href="https://github.com/Zulkifli1409/smarteye" target="_blank" style="color: #FFD700;">GitHub Repo</a></p>
+            <h3 class="project-title">Forum-Chat</h3>
+            <p>A full-stack real-time chat platform with group chats, private messages, admin dashboards, and secure JWT authentication.</p>
+            <span class="project-tech">React</span>
+            <span class="project-tech">Tailwind CSS</span>
+            <span class="project-tech">Socket.IO</span>
+            <span class="project-tech">Node.js</span>
+            <span class="project-tech">Express</span>
+            <span class="project-tech">MongoDB</span>
+            <p><a href="https://fortek.vercel.app/" target="_blank" style="color: #FFD700;">Live</a></p>
         </div>
         """, unsafe_allow_html=True)
 
@@ -412,10 +415,14 @@ def app():
         st.markdown(
             """
         <div class="project-card floating">
-            <h3 class="project-title">X-Scraper</h3>
-            <p>A Python-based tweet scraping tool for the X platform, featuring auto-login and robust filtering.</p>
+            <h3 class="project-title">YouTube-Comment-Scraper</h3>
+            <p>A Python-based YouTube comment scraper with AI-powered detection and multi-format export support.</p>
             <span class="project-tech">Python</span>
-            <p><a href="https://github.com/Zulkifli1409/X-Scraper" target="_blank" style="color: #FFD700;">GitHub Repo</a></p>
+            <span class="project-tech">Botasaurus</span>
+            <span class="project-tech">Requests</span>
+            <span class="project-tech">BeautifulSoup4</span>
+            <span class="project-tech">Google Gemini API</span>
+            <p><a href="https://github.com/Zulkifli1409/YouTube-Comment-Scraper" target="_blank" style="color: #FFD700;">GitHub Repo</a></p>
         </div>
         """,
             unsafe_allow_html=True,

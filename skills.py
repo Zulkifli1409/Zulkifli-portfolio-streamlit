@@ -1,6 +1,8 @@
 import streamlit as st
 import plotly.graph_objects as go
+from security_middleware import secure_page_wrapper
 
+@secure_page_wrapper
 def app():
     st.markdown("""
     <style>

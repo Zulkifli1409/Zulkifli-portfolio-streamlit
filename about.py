@@ -1,6 +1,8 @@
 import streamlit as st
+from security_middleware import secure_page_wrapper, sanitize_input
 
 
+@secure_page_wrapper
 def app():
     st.markdown(
         """
@@ -352,7 +354,7 @@ def app():
                         background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FFFF00 100%); 
                         border-radius: 50%; display: flex; align-items: center; justify-content: center; 
                         font-size: 3rem; color: #000; margin: 0 auto; border: 4px solid #FFA500; overflow: hidden;">
-                <img src="https://i.ibb.co/nMkDyMgd/97692902.jpg" alt="Foto Kamu" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                <img src="https://i.ibb.co/nMkDyMgd/97692902.jpg" alt="Zulkifli" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
             </div>
         </div>
         """,
@@ -451,13 +453,23 @@ def app():
         """
     <div class="education-item">
         <h4 style="color: #FFD700; margin-bottom: 0.5rem;">D4 Information Technology and Computer Science (Informatics Engineering)</h4>
-        <p style="color: #FFA500; font-weight: 600;">Politeknik Negeri Lhokseumawe (2022 - 2026, Semester 6)</p>
+        <p style="color: #FFA500; font-weight: 600;">Politeknik Negeri Lhokseumawe (2022 - 2026, Semester 7)</p>
         <p style="color: #f0f0f0;">Currently pursuing a diploma with focus on information technology and computer science.</p>
     </div>
     """,
         unsafe_allow_html=True,
     )
 
+    st.markdown(
+        """
+    <div class="education-item">
+        <h4 style="color: #FFD700; margin-bottom: 0.5rem;">Juara 2 KMIPN VII – Poster E-Government</h4>
+        <p style="color: #FFA500; font-weight: 600;">Politeknik Negeri Padang (2025)</p>
+        <p style="color: #f0f0f0;">Second place winner in the E-Government Poster competition at the 7th National Polytechnic IT Competition.</p>
+    </div>
+    """,
+        unsafe_allow_html=True,
+    )
     st.markdown(
         """
     <div class="education-item">

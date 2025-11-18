@@ -1,10 +1,33 @@
 import streamlit as st
 import datetime
 
+# Security imports
+from security_middleware import (
+    init_security_session,
+    security_headers,
+    prevent_clickjacking,
+    log_security_event,
+    check_csrf_token
+)
+
 st.set_page_config(
     page_title="Zulkifli - Portfolio",
     page_icon="👨‍💻",
+    initial_sidebar_state="collapsed",
+    menu_items={
+        'Report a bug': "https://github.com/zulkifli1409/portfolio/issues",
+        'About': "Secure Portfolio Application with enterprise-grade security"
+    }
 )
+
+# Initialize security
+init_security_session()
+security_headers()
+prevent_clickjacking()
+check_csrf_token()
+
+# Log page access
+log_security_event("PAGE_ACCESS", "Main portfolio page loaded", "INFO")
 
 import home, about, skills, projects, contact
 st.markdown("""

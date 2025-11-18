@@ -1,7 +1,17 @@
 import streamlit as st
 import requests
+from security_middleware import (
+    secure_page_wrapper,
+    sanitize_input,
+    validate_github_username,
+    secure_api_call,
+    log_security_event,
+    validate_url,
+    secure_external_link
+)
 
 
+@secure_page_wrapper
 def header(title):
     st.markdown(
         f"""
@@ -14,33 +24,103 @@ def header(title):
     )
 
 
+@st.cache_data(ttl=3600)  # Cache for 1 hour to avoid rate limits
 def load_portfolio_data(github_user="zulkifli1409"):
+    # Validate GitHub username (don't sanitize - it removes valid chars)
+    if not validate_github_username(github_user):
+        log_security_event("INVALID_GITHUB_USER", f"Invalid username: {github_user}", "WARNING")
+        return {"projects": []}
+    
     url = f"https://api.github.com/users/{github_user}/repos"
-    response = requests.get(url)
-    if response.status_code != 200:
+    response = None
+    
+    # Prepare headers with optional GitHub token
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+        'Accept': 'application/vnd.github.v3+json'
+    }
+    
+    # Try to get GitHub token from environment or secrets
+    github_token = None
+    try:
+        import os
+        github_token = os.getenv('GITHUB_TOKEN')
+        if not github_token:
+            # Try Streamlit secrets
+            if hasattr(st, 'secrets') and 'github' in st.secrets:
+                github_token = st.secrets['github'].get('token')
+    except:
+        pass
+    
+    # Add authorization if token available (increases rate limit to 5000/hour)
+    if github_token:
+        headers['Authorization'] = f'token {github_token}'
+    
+    # Try secure API call first
+    try:
+        response = secure_api_call(url, headers)
+    except Exception as e:
+        log_security_event("SECURE_API_FAILED", f"Secure API call failed: {str(e)}", "WARNING")
+    
+    # Fallback to direct requests if secure call failed
+    if not response:
+        try:
+            response = requests.get(url, headers=headers, timeout=15)
+        except Exception as e:
+            log_security_event("DIRECT_API_FAILED", f"Direct API call failed: {str(e)}", "ERROR")
+            return {"projects": []}
+    
+    # Check response status
+    if not response or response.status_code != 200:
+        status = response.status_code if response else "No response"
+        
+        # Check if it's rate limit error
+        if response and response.status_code == 403:
+            try:
+                error_data = response.json()
+                if 'rate limit' in error_data.get('message', '').lower():
+                    log_security_event("RATE_LIMIT", "GitHub API rate limit exceeded", "WARNING")
+                    return {"projects": [], "error": "rate_limit"}
+            except:
+                pass
+        
+        log_security_event("API_ERROR", f"Failed to fetch repos: {status}", "WARNING")
         return {"projects": []}
 
-    repos = response.json()
+    try:
+        repos = response.json()
+    except Exception as e:
+        log_security_event("JSON_PARSE_ERROR", str(e), "ERROR")
+        return {"projects": []}
 
     # Sort repos by 'created_at' in descending order (newest first)
     sorted_repos = sorted(repos, key=lambda repo: repo["created_at"], reverse=True)
 
     projects = []
     for repo in sorted_repos:
+        # Validate and sanitize repo data
+        repo_url = repo.get("html_url", "")
+        if not validate_url(repo_url):
+            continue  # Skip invalid URLs
+        
         projects.append(
             {
-                "title": repo["name"],
-                "description": repo["description"] or "No description provided.",
-                "url": repo["html_url"],
-                "language": repo["language"] or "N/A",
-                "stars": repo["stargazers_count"],
-                "forks": repo["forks_count"],
+                "title": sanitize_input(repo.get("name", "Unnamed")),
+                "description": sanitize_input(repo.get("description") or "No description provided."),
+                "url": repo_url,
+                "language": sanitize_input(repo.get("language") or "N/A"),
+                "stars": int(repo.get("stargazers_count", 0)),
+                "forks": int(repo.get("forks_count", 0)),
             }
         )
     return {"projects": projects}
 
 
+@secure_page_wrapper
 def app():
+    # Debug mode - uncomment to see errors
+    # st.write("DEBUG: Loading projects...")
+    
     st.markdown(
         """
         <style>
@@ -457,11 +537,64 @@ def app():
 
     header("🚀 Projects")
 
-    data = load_portfolio_data()
-    projects = data.get("projects", [])
+    # Add loading indicator
+    with st.spinner("🔄 Fetching projects from GitHub..."):
+        data = load_portfolio_data()
+        projects = data.get("projects", [])
 
     if not projects:
-        st.warning("No projects found or failed to fetch from GitHub.")
+        # Check if it's a rate limit error
+        if data.get("error") == "rate_limit":
+            st.error("🚫 GitHub API Rate Limit Exceeded!")
+            st.warning("""
+            **GitHub API rate limit has been reached (60 requests/hour for unauthenticated requests).**
+            
+            **Solutions:**
+            1. **Wait**: Rate limit resets every hour
+            2. **Add GitHub Token** (Recommended):
+               - Generate a token at: https://github.com/settings/tokens
+               - Add to `.streamlit/secrets.toml`:
+                 ```toml
+                 [github]
+                 token = "your_github_token"
+                 ```
+               - Or set environment variable: `GITHUB_TOKEN=your_token`
+               - This increases limit to 5,000 requests/hour
+            
+            **Data is cached for 1 hour**, so refreshing won't help immediately.
+            """)
+            
+            # Show when rate limit resets
+            st.info("💡 The projects are cached. Once loaded successfully, they won't need to be fetched again for 1 hour.")
+        else:
+            st.error("❌ No projects found or failed to fetch from GitHub.")
+            st.info("""
+            **Possible reasons:**
+            - Network connectivity issues
+            - Invalid GitHub username
+            - No public repositories found
+            
+            **Try:**
+            - Check your internet connection
+            - Verify GitHub username in code: `zulkifli1409`
+            """)
+        
+        # Show retry button
+        col1, col2 = st.columns(2)
+        with col1:
+            if st.button("🔄 Retry Fetching"):
+                st.cache_data.clear()  # Clear cache
+                st.rerun()
+        with col2:
+            if st.button("📖 GitHub Token Setup Guide"):
+                st.info("""
+                **Quick Setup:**
+                1. Go to: https://github.com/settings/tokens
+                2. Click "Generate new token (classic)"
+                3. Select scope: `public_repo`
+                4. Copy the token
+                5. Add to `.streamlit/secrets.toml` or set `GITHUB_TOKEN` env var
+                """)
         return
 
     # Filter inputs dengan styling

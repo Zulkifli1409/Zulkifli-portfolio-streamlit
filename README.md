@@ -13,13 +13,13 @@ A modern, interactive portfolio website built with Streamlit, featuring a sleek 
 
 ## 🏗️ Built With
 
-| Technology | Purpose |
-|------------|---------|
-| ![Python](https://img.shields.io/badge/Python-3.x-blue?logo=python) | Core programming language |
-| ![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?logo=streamlit&logoColor=white) | Web framework |
-| ![Plotly](https://img.shields.io/badge/Plotly-3F4F75?logo=plotly&logoColor=white) | Interactive visualizations |
-| ![CSS3](https://img.shields.io/badge/CSS3-1572B6?logo=css3&logoColor=white) | Custom styling |
-| ![Font Awesome](https://img.shields.io/badge/Font_Awesome-339AF0?logo=fontawesome&logoColor=white) | Icons |
+| Technology                                                                                         | Purpose                    |
+| -------------------------------------------------------------------------------------------------- | -------------------------- |
+| ![Python](https://img.shields.io/badge/Python-3.x-blue?logo=python)                                | Core programming language  |
+| ![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?logo=streamlit&logoColor=white)         | Web framework              |
+| ![Plotly](https://img.shields.io/badge/Plotly-3F4F75?logo=plotly&logoColor=white)                  | Interactive visualizations |
+| ![CSS3](https://img.shields.io/badge/CSS3-1572B6?logo=css3&logoColor=white)                        | Custom styling             |
+| ![Font Awesome](https://img.shields.io/badge/Font_Awesome-339AF0?logo=fontawesome&logoColor=white) | Icons                      |
 
 ## 📂 Project Structure
 
@@ -27,7 +27,7 @@ A modern, interactive portfolio website built with Streamlit, featuring a sleek 
 portfolio/
 ├── 📄 main.py              # Main application entry point
 ├── 🏠 home.py              # Home page component
-├── 👤 about.py             # About page component  
+├── 👤 about.py             # About page component
 ├── 🛠️ skills.py            # Skills showcase component
 ├── 📂 projects.py          # Projects gallery component
 ├── 📞 contact.py           # Contact information component
@@ -47,35 +47,93 @@ portfolio/
 ### Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/zulkifli1409/portfolio.git
    cd portfolio
    ```
 
 2. **Create virtual environment** (recommended)
+
    ```bash
    python -m venv venv
-   
+
    # On Windows
    venv\Scripts\activate
-   
+
    # On macOS/Linux
    source venv/bin/activate
    ```
 
 3. **Install dependencies**
+
    ```bash
    pip install -r requirements.txt
    ```
 
-4. **Run the application**
+4. **Configure email (for contact form)**
+
+   ```bash
+   # Copy environment template
+   cp .env.example .env
+
+   # Edit .env with your credentials
+   # OR set up Streamlit secrets (see SECURITY.md)
+   ```
+
+5. **Run the application**
+
    ```bash
    streamlit run main.py
    ```
 
-5. **Open in browser**
+6. **Open in browser**
    - Local URL: `http://localhost:8501`
    - Network URL: Will be displayed in terminal
+
+## 🔐 Security & Production
+
+This portfolio includes **production-grade security features**:
+
+- ✅ **Input Validation**: Email, phone, and message sanitization
+- ✅ **Rate Limiting**: Anti-spam protection (3 submissions/hour)
+- ✅ **XSS Prevention**: HTML escaping and injection protection
+- ✅ **Secure Credentials**: Environment variables & Streamlit secrets
+- ✅ **Data Protection**: Encrypted logging with unique IDs
+
+### Before Deploying:
+
+1. **Check security configuration**
+
+   ```bash
+   python check_production.py
+   ```
+
+2. **Clean credentials**
+
+   ```bash
+   python clean_for_git.py
+   ```
+
+3. **Review security guide**
+   - See [SECURITY.md](SECURITY.md) for detailed instructions
+   - Set up secrets in Streamlit Cloud or environment variables
+   - Never commit files with real credentials
+
+### Production Deployment:
+
+**Streamlit Cloud** (Recommended):
+
+1. Push to GitHub (without secrets)
+2. Deploy at [share.streamlit.io](https://share.streamlit.io)
+3. Add secrets in Settings → Secrets
+
+**Custom Server**:
+
+1. Set environment variables
+2. Use systemd or PM2
+3. Enable HTTPS
+4. Set up monitoring
 
 ## 📋 Requirements
 
@@ -92,30 +150,35 @@ streamlit-lottie>=0.0.5
 ## 🎯 Page Details
 
 ### 🏠 Home Page
+
 - **Hero Section**: Animated introduction with call-to-action
 - **Featured Projects**: Showcase of top projects
 - **Quick Stats**: Key metrics and achievements
 - **Modern Layout**: Card-based responsive design
 
 ### 👤 About Page
+
 - **Personal Story**: Professional background and journey
 - **Services**: Offered services and expertise
 - **Education**: Academic background and certifications
 - **Interests**: Personal hobbies and activities
 
 ### 🛠️ Skills Page
+
 - **Interactive Progress Bars**: Visual skill proficiency indicators
 - **Radar Chart**: Comprehensive skills overview
 - **Skill Categories**: Organized by technology and expertise
 - **Animated Cards**: Engaging skill presentation
 
 ### 📂 Projects Page
+
 - **GitHub Integration**: Direct connection to repositories
 - **Advanced Filtering**: Filter by technology, category, or date
 - **Search Functionality**: Find projects quickly
 - **Project Details**: Comprehensive project information
 
 ### 📞 Contact Page
+
 - **Multiple Contact Methods**: Email, phone, social media
 - **Contact Form**: Direct message functionality
 - **Social Links**: Professional social media profiles
@@ -124,12 +187,14 @@ streamlit-lottie>=0.0.5
 ## 🎨 Customization
 
 ### Adding New Sections
+
 1. Create a new Python file in the root directory
 2. Import in `main.py`
 3. Add to the navigation menu
 4. Update styling as needed
 
 ### Modifying Content
+
 - Update personal information in each component file
 - Modify project data in `projects.py`
 - Adjust skills and proficiency levels in `skills.py`
@@ -138,17 +203,20 @@ streamlit-lottie>=0.0.5
 ## 🔧 Development
 
 ### Running in Development Mode
+
 ```bash
 streamlit run main.py --server.runOnSave true
 ```
 
 ### Code Structure
+
 - **Modular Design**: Each page is a separate component
 - **Reusable Functions**: Common utilities in separate modules
 - **Clean Code**: Follows PEP 8 style guidelines
 - **Documentation**: Comprehensive inline comments
 
 ### Contributing
+
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
 3. Commit changes (`git commit -m 'Add amazing feature'`)
@@ -167,16 +235,19 @@ streamlit run main.py --server.runOnSave true
 ### Common Issues
 
 **Port Already in Use**
+
 ```bash
 streamlit run main.py --server.port 8502
 ```
 
 **Module Not Found**
+
 ```bash
 pip install -r requirements.txt --upgrade
 ```
 
 **Styling Issues**
+
 - Clear browser cache
 - Check CSS syntax in style tags
 - Verify Streamlit version compatibility
@@ -204,6 +275,7 @@ copies or substantial portions of the Software.
 ## 👤 Author
 
 **Zulkifli**
+
 - 🌐 GitHub: [@zulkifli1409](https://github.com/zulkifli1409)
 - 💼 LinkedIn: [Zulkifli](https://linkedin.com/in/zulkifli)
 - 📧 Email: zul140904@gmail.com
@@ -221,6 +293,7 @@ copies or substantial portions of the Software.
 Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://github.com/zulkifli1409/portfolio/issues).
 
 ### How to Contribute
+
 1. Read the [Contributing Guidelines](CONTRIBUTING.md)
 2. Fork the project
 3. Create your feature branch

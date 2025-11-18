@@ -1,4 +1,74 @@
 import streamlit as st
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from datetime import datetime
+import re
+import html
+import hashlib
+import time
+
+# Import email configuration
+try:
+    from email_config import EMAIL_CONFIG
+except ImportError:
+    # Default configuration if email_config.py doesn't exist
+    EMAIL_CONFIG = {
+        "enabled": False,
+        "sender_email": "your-email@gmail.com",
+        "sender_password": "your-app-password",
+        "receiver_email": "zul140904@gmail.com",
+        "smtp_server": "smtp.gmail.com",
+        "smtp_port": 465
+    }
+
+# Rate limiting setup
+if 'last_submission_time' not in st.session_state:
+    st.session_state.last_submission_time = 0
+if 'submission_count' not in st.session_state:
+    st.session_state.submission_count = 0
+
+def validate_email(email):
+    """Validate email format"""
+    pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+    return re.match(pattern, email) is not None
+
+def validate_phone(phone):
+    """Validate phone format (optional, allows empty)"""
+    if not phone:
+        return True
+    # Allow international formats: +, digits, spaces, hyphens
+    pattern = r'^[\+]?[\d\s\-\(\)]+$'
+    return re.match(pattern, phone) is not None
+
+def sanitize_input(text):
+    """Sanitize user input to prevent XSS and injection attacks"""
+    if not text:
+        return ""
+    # Remove HTML tags and escape special characters
+    text = html.escape(str(text))
+    # Remove any potential script tags
+    text = re.sub(r'<script[^>]*>.*?</script>', '', text, flags=re.IGNORECASE | re.DOTALL)
+    return text.strip()
+
+def check_rate_limit():
+    """Check if user is submitting too frequently (anti-spam)"""
+    current_time = time.time()
+    time_since_last = current_time - st.session_state.last_submission_time
+    
+    # Reset counter after 1 hour
+    if time_since_last > 3600:
+        st.session_state.submission_count = 0
+    
+    # Allow max 3 submissions per hour
+    if st.session_state.submission_count >= 3 and time_since_last < 3600:
+        return False, f"Too many submissions. Please try again in {int((3600 - time_since_last) / 60)} minutes."
+    
+    # Require at least 30 seconds between submissions
+    if time_since_last < 30:
+        return False, f"Please wait {int(30 - time_since_last)} seconds before submitting again."
+    
+    return True, None
 
 st.markdown(
     """
@@ -7,6 +77,105 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+def send_email(name, email, company, phone, subject, message, budget):
+    """Send email notification when form is submitted (with security measures)"""
+    
+    # Check if email is enabled
+    if not EMAIL_CONFIG.get("enabled", False):
+        return False
+    
+    try:
+        # Sanitize all inputs
+        name = sanitize_input(name)
+        email = sanitize_input(email)
+        company = sanitize_input(company)
+        phone = sanitize_input(phone)
+        subject = sanitize_input(subject)
+        message = sanitize_input(message)
+        budget = sanitize_input(budget)
+        
+        # Get email configuration
+        sender_email = EMAIL_CONFIG["sender_email"]
+        sender_password = EMAIL_CONFIG["sender_password"]
+        receiver_email = EMAIL_CONFIG["receiver_email"]
+        smtp_server = EMAIL_CONFIG["smtp_server"]
+        smtp_port = EMAIL_CONFIG["smtp_port"]
+        
+        # Create message
+        msg = MIMEMultipart("alternative")
+        msg["Subject"] = f"New Contact Form: {subject}"
+        msg["From"] = sender_email
+        msg["To"] = receiver_email
+        
+        # Create HTML email body
+        html = f"""
+        <html>
+            <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+                <div style="max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f4f4f4;">
+                    <div style="background-color: #ffc107; padding: 20px; text-align: center;">
+                        <h1 style="color: #1a1a1a; margin: 0;">New Contact Form Submission</h1>
+                    </div>
+                    <div style="background-color: white; padding: 30px; margin-top: 20px; border-radius: 5px;">
+                        <h2 style="color: #ffc107; border-bottom: 2px solid #ffc107; padding-bottom: 10px;">Contact Details</h2>
+                        <table style="width: 100%; margin: 20px 0;">
+                            <tr>
+                                <td style="padding: 10px; font-weight: bold; width: 150px;">Name:</td>
+                                <td style="padding: 10px;">{name}</td>
+                            </tr>
+                            <tr style="background-color: #f9f9f9;">
+                                <td style="padding: 10px; font-weight: bold;">Email:</td>
+                                <td style="padding: 10px;">{email}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px; font-weight: bold;">Company:</td>
+                                <td style="padding: 10px;">{company if company else 'Not provided'}</td>
+                            </tr>
+                            <tr style="background-color: #f9f9f9;">
+                                <td style="padding: 10px; font-weight: bold;">Phone:</td>
+                                <td style="padding: 10px;">{phone if phone else 'Not provided'}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px; font-weight: bold;">Project Type:</td>
+                                <td style="padding: 10px;">{subject}</td>
+                            </tr>
+                            <tr style="background-color: #f9f9f9;">
+                                <td style="padding: 10px; font-weight: bold;">Budget:</td>
+                                <td style="padding: 10px;">{budget}</td>
+                            </tr>
+                        </table>
+                        
+                        <h2 style="color: #ffc107; border-bottom: 2px solid #ffc107; padding-bottom: 10px; margin-top: 30px;">Project Details</h2>
+                        <div style="padding: 15px; background-color: #f9f9f9; border-left: 4px solid #ffc107; margin: 20px 0;">
+                            {message.replace(chr(10), '<br>')}
+                        </div>
+                        
+                        <div style="margin-top: 30px; padding: 15px; background-color: #e8f5e9; border-radius: 5px;">
+                            <p style="margin: 0; color: #2e7d32;">
+                                <strong>📅 Submitted:</strong> {datetime.now().strftime('%B %d, %Y at %I:%M %p WIB')}
+                            </p>
+                        </div>
+                    </div>
+                    <div style="text-align: center; margin-top: 20px; color: #666; font-size: 12px;">
+                        <p>This email was sent from your portfolio contact form</p>
+                    </div>
+                </div>
+            </body>
+        </html>
+        """
+        
+        # Attach HTML content
+        part = MIMEText(html, "html")
+        msg.attach(part)
+        
+        # Send email via SMTP
+        with smtplib.SMTP_SSL(smtp_server, smtp_port) as server:
+            server.login(sender_email, sender_password)
+            server.sendmail(sender_email, receiver_email, msg.as_string())
+        
+        return True
+    except Exception as e:
+        print(f"Error sending email: {str(e)}")  # Log to console instead of showing to user
+        return False
 
 def app():
     st.markdown(
@@ -703,14 +872,81 @@ body {
         submitted = st.form_submit_button("🚀 Send Message", use_container_width=True)
 
         if submitted:
-            if name and email and message:
-                st.success(
-                    "🎉 Thank you for your message! I'll get back to you within 24 hours. "
-                    "Your information will be kept confidential and secure."
-                )
-                st.balloons()
-            else:
+            # Validate required fields
+            if not name or not email or not message:
                 st.error("❌ Please fill in all required fields (marked with *)")
+            # Validate email format
+            elif not validate_email(email):
+                st.error("❌ Please enter a valid email address")
+            # Validate phone format (if provided)
+            elif phone and not validate_phone(phone):
+                st.error("❌ Please enter a valid phone number")
+            # Check message length (prevent spam)
+            elif len(message) < 10:
+                st.error("❌ Message is too short. Please provide more details (minimum 10 characters)")
+            elif len(message) > 5000:
+                st.error("❌ Message is too long. Please keep it under 5000 characters")
+            else:
+                # Check rate limit
+                can_submit, rate_limit_msg = check_rate_limit()
+                
+                if not can_submit:
+                    st.error(f"🚫 {rate_limit_msg}")
+                else:
+                    # Sanitize inputs
+                    name_clean = sanitize_input(name)
+                    email_clean = sanitize_input(email)
+                    company_clean = sanitize_input(company)
+                    phone_clean = sanitize_input(phone)
+                    message_clean = sanitize_input(message)
+                    
+                    # Show loading spinner
+                    with st.spinner("🔐 Sending your secure message..."):
+                        # Try to send email
+                        email_sent = send_email(
+                            name_clean, email_clean, company_clean, 
+                            phone_clean, subject, message_clean, budget
+                        )
+                        
+                        if email_sent:
+                            st.success(
+                                "🎉 Thank you for your message! I'll get back to you within 24 hours. "
+                                "Your information will be kept confidential and secure."
+                            )
+                            st.balloons()
+                        else:
+                            st.warning(
+                                "⚠️ Your message was received, but email notification failed. "
+                                "I'll still contact you at the email/phone you provided. "
+                                "For faster response, please reach me via WhatsApp: +62 895-0810-9402"
+                            )
+                        
+                        # Update rate limit tracking
+                        st.session_state.last_submission_time = time.time()
+                        st.session_state.submission_count += 1
+                        
+                        # Log the submission securely
+                        try:
+                            # Create unique submission ID
+                            submission_id = hashlib.sha256(
+                                f"{email_clean}{time.time()}".encode()
+                            ).hexdigest()[:12]
+                            
+                            with open("contact_submissions.txt", "a", encoding="utf-8") as f:
+                                f.write(f"\n{'='*80}\n")
+                                f.write(f"Submission ID: {submission_id}\n")
+                                f.write(f"Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+                                f.write(f"Name: {name_clean}\n")
+                                f.write(f"Email: {email_clean}\n")
+                                f.write(f"Company: {company_clean if company_clean else 'N/A'}\n")
+                                f.write(f"Phone: {phone_clean if phone_clean else 'N/A'}\n")
+                                f.write(f"Project Type: {subject}\n")
+                                f.write(f"Budget: {budget}\n")
+                                f.write(f"Message:\n{message_clean}\n")
+                                f.write(f"{'='*80}\n")
+                        except Exception as e:
+                            # Log error but don't show to user
+                            print(f"Error logging submission: {str(e)}")
 
     # FAQ Section
     st.markdown("---")

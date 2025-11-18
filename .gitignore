@@ -1,0 +1,73 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# ⚠️ SECURITY: Sensitive Configuration Files
+email_config.py
+.streamlit/secrets.toml
+.streamlit/config.toml
+
+# Contact form submissions (contains user data)
+contact_submissions.txt
+*.log
+
+# Security logs (contains sensitive information)
+security_logs.txt
+security_*.log
+
+# Environment variables
+.env
+.env.local
+.env.production
+.env.development
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.settings/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Backup files
+*.bak
+*.backup
+*~.nib
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+*.cover
+
+# Deployment
+*.pem
+*.key
+*.crt
