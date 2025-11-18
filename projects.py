@@ -543,58 +543,12 @@ def app():
         projects = data.get("projects", [])
 
     if not projects:
-        # Check if it's a rate limit error
-        if data.get("error") == "rate_limit":
-            st.error("🚫 GitHub API Rate Limit Exceeded!")
-            st.warning("""
-            **GitHub API rate limit has been reached (60 requests/hour for unauthenticated requests).**
-            
-            **Solutions:**
-            1. **Wait**: Rate limit resets every hour
-            2. **Add GitHub Token** (Recommended):
-               - Generate a token at: https://github.com/settings/tokens
-               - Add to `.streamlit/secrets.toml`:
-                 ```toml
-                 [github]
-                 token = "your_github_token"
-                 ```
-               - Or set environment variable: `GITHUB_TOKEN=your_token`
-               - This increases limit to 5,000 requests/hour
-            
-            **Data is cached for 1 hour**, so refreshing won't help immediately.
-            """)
-            
-            # Show when rate limit resets
-            st.info("💡 The projects are cached. Once loaded successfully, they won't need to be fetched again for 1 hour.")
-        else:
-            st.error("❌ No projects found or failed to fetch from GitHub.")
-            st.info("""
-            **Possible reasons:**
-            - Network connectivity issues
-            - Invalid GitHub username
-            - No public repositories found
-            
-            **Try:**
-            - Check your internet connection
-            - Verify GitHub username in code: `zulkifli1409`
-            """)
+        st.error("❌ Unable to load projects at this time.")
+        st.info("Please try again later or contact the administrator if the problem persists.")
         
-        # Show retry button
-        col1, col2 = st.columns(2)
-        with col1:
-            if st.button("🔄 Retry Fetching"):
-                st.cache_data.clear()  # Clear cache
-                st.rerun()
-        with col2:
-            if st.button("📖 GitHub Token Setup Guide"):
-                st.info("""
-                **Quick Setup:**
-                1. Go to: https://github.com/settings/tokens
-                2. Click "Generate new token (classic)"
-                3. Select scope: `public_repo`
-                4. Copy the token
-                5. Add to `.streamlit/secrets.toml` or set `GITHUB_TOKEN` env var
-                """)
+        if st.button("🔄 Retry"):
+            st.cache_data.clear()
+            st.rerun()
         return
 
     # Filter inputs dengan styling
