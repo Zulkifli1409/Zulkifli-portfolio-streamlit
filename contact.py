@@ -54,6 +54,13 @@ def sanitize_input(text):
 def check_rate_limit():
     """Check if user is submitting too frequently (anti-spam)"""
     current_time = time.time()
+    
+    # Initialize session state variables if not exist
+    if 'last_submission_time' not in st.session_state:
+        st.session_state.last_submission_time = 0
+    if 'submission_count' not in st.session_state:
+        st.session_state.submission_count = 0
+    
     time_since_last = current_time - st.session_state.last_submission_time
     
     # Reset counter after 1 hour
